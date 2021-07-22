@@ -6,6 +6,7 @@ const globalTheme = extendTheme({
 			body: {
 				backgroundColor: 'cyan.50',
 				color: 'gray.800',
+				letterSpacing: '3px',
 				fontFamily:
 					"'ヒラギノ角ゴシック','Hiragino Sans','Hiragino Kaku Gothic ProN','ヒラギノ角ゴ ProN W3','ＭＳ ゴシック','ＭＳ Ｐゴシック','MS PGothic',sans-serif",
 			},
