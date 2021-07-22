@@ -80,14 +80,14 @@ export const Login: VFC = memo(() => {
 							<InputGroup>
 								<InputLeftElement
 									pointerEvents='none'
-									children={<EmailIcon color='gray.300' />}
+									children={<EmailIcon color='gray.300' h={5} w={5} />}
 								/>
 								<Input variant='flushed' placeholder='メールアドレス' mb={4} />
 							</InputGroup>
 							<InputGroup>
 								<InputLeftElement
 									pointerEvents='none'
-									children={<UnlockIcon color='gray.300' />}
+									children={<UnlockIcon color='gray.300' h={5} w={5} />}
 								/>
 								<Input
 									variant='flushed'
