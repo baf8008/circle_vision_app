@@ -74,7 +74,9 @@ export const SignUp: VFC = memo(() => {
 							</Button>
 						</InputRightElement>
 					</InputGroup>
-					<PrimaryButton onClick={onClickLogin}>登録</PrimaryButton>
+					<PrimaryButton onClick={onClickLogin}>
+						登録
+					</PrimaryButton>
 					<br />
 					<Link onClick={handleClickLogin}>アカウントをお持ちの方</Link>
 				</Flex>

@@ -77,14 +77,14 @@ export const Login: VFC = memo(() => {
 					</AccordionButton>
 					<AccordionPanel pb={4}>
 						<Flex align='center' justify='space-between' direction='column'>
-							<InputGroup>
+							<InputGroup mt={5}>
 								<InputLeftElement
 									pointerEvents='none'
 									children={<EmailIcon color='gray.300' h={5} w={5} />}
 								/>
 								<Input variant='flushed' placeholder='メールアドレス' mb={4} />
 							</InputGroup>
-							<InputGroup>
+							<InputGroup mt={5}>
 								<InputLeftElement
 									pointerEvents='none'
 									children={<UnlockIcon color='gray.300' h={5} w={5} />}
