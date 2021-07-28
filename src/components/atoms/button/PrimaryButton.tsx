@@ -10,7 +10,13 @@ type Props = {
 export const PrimaryButton: VFC<Props> = memo((props) => {
 	const { onClick, children } = props;
 	return (
-		<Button colorScheme='blue' size='md' shadow='md' onClick={onClick}>
+		<Button
+			type='submit'
+			colorScheme='blue'
+			size='md'
+			shadow='md'
+			onClick={onClick}
+		>
 			{children}
 		</Button>
 	);
