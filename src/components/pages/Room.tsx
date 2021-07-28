@@ -1,95 +1,71 @@
-import { VFC, memo } from 'react';
+import { VFC, memo, useContext, useEffect, useState, useCallback } from 'react';
 
-import {
-	Badge,
-	Box,
-	Button,
-	Flex,
-	FormControl,
-	Heading,
-	Textarea,
-	Text,
-} from '@chakra-ui/react';
+import { Flex } from '@chakra-ui/react';
+
+import { ChatItem } from '../organisms/layout/ChatItem';
+import { ChatForm } from '../organisms/layout/ChatForm';
+import { HeadingTitle } from '../atoms/headingTitle/HeadingTitle';
+import { AuthContext } from '../providers/AuthProvider';
+import firebase, { db } from '../../firebase/config';
 
 export const Room: VFC = memo(() => {
+	const authSate = useContext(AuthContext);
+
+	const [messages, setMessages] = useState<firebase.firestore.DocumentData[]>(
+		[]
+	);
+
+	//chatItemに入力されたコメント、ユーザー名を追加する処理
+	const addChat = useCallback(
+		(text: string) => {
+			db.collection('messages')
+				.add({
+					authorId: authSate.user?.uid,
+					username: authSate.user?.displayName,
+					createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+					content: text,
+				})
+				.then(() => {
+					console.log('追加成功');
+				})
+				.catch((err) => {
+					console.log('追加失敗:', err);
+				});
+		},
+		[authSate.user?.displayName, authSate.user?.uid]
+	);
+
+	//firebaseのデータの変更があったときに、データを取得する処理
+	useEffect(() => {
+		const messagesRef = db.collection('messages');
+		messagesRef.onSnapshot((querySnapshot) => {
+			const data = querySnapshot.docs.map((doc) => {
+				return {
+					...doc.data(),
+					id: doc.id,
+				};
+			});
+			setMessages(data);
+			console.log(data);
+		});
+	}, []);
+
 	return (
 		<>
 			<Flex>
-				<Heading as='h1' size='xl' m='5px auto'>
-					チャットルーム
-				</Heading>
+				<HeadingTitle>チャットルーム</HeadingTitle>
 			</Flex>
-			<FormControl
-				m={2}
-				display='flex'
-				justifyContent='space-around'
-				alignItems='center'
-			>
-				<Textarea
-					placeholder='チャットを入力....'
-					w={{ base: '70%', md: '85%' }}
-				/>
-				<Button
-					mr={{ base: '15px', md: '30px' }}
-					colorScheme='pink'
-					shadow='md'
-				>
-					送信
-				</Button>
-			</FormControl>
+			<ChatForm addChat={addChat} />
 			<Flex alignItems='left' direction='column'>
-				<Box
-					bg='white'
-					w='80%'
-					p={{ base: 4, md: 6 }}
-					m={{ base: 4, md: 6 }}
-					borderRadius='xl'
-					shadow='md'
-				>
-					<Flex justify='space-between' mb={2}>
-						<Text fontWeight='bold' fontSize={{ base: 'xl', md: '3xl' }}>
-							ユーザー1
-						</Text>
-						<Button
-							size='sm'
-							fontSize={{ base: 'xs', md: 'xl' }}
-							px={5}
-							bg='gray.100'
-							shadow='md'
-							_hover={{ opacity: 0.8 }}
-						>
-							削除
-						</Button>
-					</Flex>
-					<Text fontSize={{ base: 'sm', md: 'xl' }}>
-						おはようオおおおおおおおおおおおおおおおおおおおおおおおおおおおおおおおおおおおおおおおおおおおおおおおおおおおおおおおおおおおおおおおおおおおおおおおおおおおおおおおおおおおおおおおおおおおおおお
-					</Text>
-				</Box>
-				<Box
-					bg='white'
-					w='80%'
-					p={{ base: 4, md: 6 }}
-					m={{ base: 4, md: 6 }}
-					borderRadius='xl'
-					shadow='md'
-				>
-					<Flex justify='space-between' mb={2}>
-						<Text fontWeight='bold' fontSize={{ base: 'xl', md: '3xl' }}>
-							ユーザー2
-						</Text>
-						<Button
-							size='sm'
-							fontSize={{ base: 'xs', md: 'xl' }}
-							px={5}
-							bg='gray.100'
-							shadow='md'
-							_hover={{ opacity: 0.8 }}
-						>
-							削除
-						</Button>
-					</Flex>
-					<Text fontSize={{ base: 'sm', md: 'xl' }}>こんにちわ</Text>
-				</Box>
+				{messages.map((message) => {
+					return (
+						<ChatItem
+							key={message.id}
+							username={message.username}
+							body={message.content}
+						/>
+					);
+				})}
 			</Flex>
 		</>
 	);
