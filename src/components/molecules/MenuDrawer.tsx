@@ -16,6 +16,7 @@ type Props = {
 	onClickHome: () => void;
 	onClickLogOut: () => void;
 	onClickYoga: () => void;
+	onClickChatRoom: () => void;
 	onClickAppInfo: () => void;
 };
 
@@ -27,6 +28,7 @@ export const MenuDrawer: VFC<Props> = memo((props) => {
 		onClickAppInfo,
 		onClickLogOut,
 		onClickYoga,
+		onClickChatRoom,
 	} = props;
 	return (
 		<Drawer placement='right' size='xs' onClose={onClose} isOpen={isOpen}>
@@ -47,6 +49,14 @@ export const MenuDrawer: VFC<Props> = memo((props) => {
 							onClick={onClickAppInfo}
 						>
 							アプリ紹介
+						</Button>
+						<Button
+							isFullWidth
+							mt={1}
+							variant='unstyled'
+							onClick={onClickChatRoom}
+						>
+							チャットルーム
 						</Button>
 						<Button isFullWidth mt={1} variant='unstyled' onClick={onClickYoga}>
 							聴きヨガ

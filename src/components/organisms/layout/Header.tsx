@@ -5,18 +5,31 @@ import { Box, Flex, Heading, Link, useDisclosure } from '@chakra-ui/react';
 
 import { MenuIconButton } from '../../atoms/button/MenuIconButton';
 import { MenuDrawer } from '../../molecules/MenuDrawer';
+import { auth } from '../../../firebase/config';
 
 export const Header: VFC = memo(() => {
 	const { isOpen, onClose, onOpen } = useDisclosure();
 	const history = useHistory();
 
+	//それぞれの遷移先
 	const onClickHome = useCallback(() => history.push('/home'), [history]);
 	const onClickAppInfo = useCallback(
 		() => history.push('/home/appinfo'),
 		[history]
 	);
+	const onClickChatRoom = useCallback(
+		() => history.push('/home/room'),
+		[history]
+	);
 	const onClickYoga = useCallback(() => history.push('/home/yoga'), [history]);
-	const onClickLogOut = useCallback(() => history.push('/'), [history]);
+
+	//signoutの処理
+	const onClickLogOut = useCallback(() => {
+		auth
+			.signOut()
+			.then(() => console.log('ログアウト成功'))
+			.catch((err) => console.log('ログアウト失敗', err));
+	}, []);
 
 	return (
 		<>
@@ -49,6 +62,9 @@ export const Header: VFC = memo(() => {
 						<Link onClick={onClickAppInfo}>アプリ紹介</Link>
 					</Box>
 					<Box pr={4}>
+						<Link onClick={onClickChatRoom}>チャットルーム</Link>
+					</Box>
+					<Box pr={4}>
 						<Link onClick={onClickYoga}>聴きヨガ</Link>
 					</Box>
 					<Link onClick={onClickLogOut}>ログアウト</Link>
@@ -62,6 +78,7 @@ export const Header: VFC = memo(() => {
 				onClickAppInfo={onClickAppInfo}
 				onClickYoga={onClickYoga}
 				onClickLogOut={onClickLogOut}
+				onClickChatRoom={onClickChatRoom}
 			/>
 		</>
 	);
