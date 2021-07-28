@@ -1,4 +1,4 @@
-import { VFC, memo, useState, useCallback } from 'react';
+import { VFC, memo, useState, useCallback, FormEvent } from 'react';
 import { useHistory } from 'react-router-dom';
 
 import {
@@ -20,7 +20,7 @@ import {
 } from '@chakra-ui/react';
 import { EmailIcon, UnlockIcon, ViewIcon, ViewOffIcon } from '@chakra-ui/icons';
 
-import { PrimaryButton } from '../atoms/button/PrimaryButton';
+import { auth } from '../../firebase/config';
 
 export const Login: VFC = memo(() => {
 	const [show, setShow] = useState(false);
@@ -30,10 +30,28 @@ export const Login: VFC = memo(() => {
 	);
 
 	const history = useHistory();
-	const onClickLogin = useCallback(() => history.push('/home'), [history]);
 	const handleClickSignUp = useCallback(
 		() => history.push('/signup'),
 		[history]
+	);
+
+	const [email, setEmail] = useState<string>('');
+	const [password, setPassword] = useState<string>('');
+
+	const handleSubmit = useCallback(
+		(e: FormEvent<HTMLFormElement>) => {
+			e.preventDefault();
+			auth
+				.signInWithEmailAndPassword(email, password)
+				.then((userCredential) => {
+					history.push('/home');
+					console.log('ログイン成功', userCredential);
+				})
+				.catch((err) => {
+					console.log('ログイン失敗', err);
+				});
+		},
+		[email, password, history]
 	);
 
 	return (
@@ -76,37 +94,48 @@ export const Login: VFC = memo(() => {
 						<AccordionIcon />
 					</AccordionButton>
 					<AccordionPanel pb={4}>
-						<Flex align='center' justify='space-between' direction='column'>
-							<InputGroup mt={5}>
-								<InputLeftElement
-									pointerEvents='none'
-									children={<EmailIcon color='gray.300' h={5} w={5} />}
-								/>
-								<Input variant='flushed' placeholder='メールアドレス' mb={4} />
-							</InputGroup>
-							<InputGroup mt={5}>
-								<InputLeftElement
-									pointerEvents='none'
-									children={<UnlockIcon color='gray.300' h={5} w={5} />}
-								/>
-								<Input
-									variant='flushed'
-									type={show ? 'text' : 'password'}
-									placeholder='パスワード'
-									mb={4}
-								/>
-								<InputRightElement width='4.5rem'>
-									<Button size='sm' onClick={handleClickPassword}>
-										{show ? <ViewOffIcon /> : <ViewIcon />}
-									</Button>
-								</InputRightElement>
-							</InputGroup>
-							<PrimaryButton onClick={onClickLogin}>ログイン</PrimaryButton>
-							<br />
-							<Link onClick={handleClickSignUp}>
-								アカウントをお持ちでない方
-							</Link>
-						</Flex>
+						<form onSubmit={handleSubmit}>
+							<Flex align='center' justify='space-between' direction='column'>
+								<InputGroup mt={5}>
+									<InputLeftElement
+										pointerEvents='none'
+										children={<EmailIcon color='gray.300' h={5} w={5} />}
+									/>
+									<Input
+										variant='flushed'
+										placeholder='*メールアドレス'
+										value={email}
+										onChange={(e) => setEmail(e.target.value)}
+										mb={4}
+									/>
+								</InputGroup>
+								<InputGroup mt={5}>
+									<InputLeftElement
+										pointerEvents='none'
+										children={<UnlockIcon color='gray.300' h={5} w={5} />}
+									/>
+									<Input
+										variant='flushed'
+										placeholder='*パスワード'
+										type={show ? 'text' : 'password'}
+										value={password}
+										onChange={(e) => setPassword(e.target.value)}
+										mb={4}
+									/>
+									<InputRightElement width='4.5rem'>
+										<Button size='sm' onClick={handleClickPassword}>
+											{show ? <ViewOffIcon /> : <ViewIcon />}
+										</Button>
+									</InputRightElement>
+								</InputGroup>
+								<Button type='submit' colorScheme='blue' size='md' shadow='md'>
+									ログイン
+								</Button>
+								<Link mt={3} onClick={handleClickSignUp}>
+									アカウントをお持ちでない方
+								</Link>
+							</Flex>
+						</form>
 					</AccordionPanel>
 				</AccordionItem>
 			</Accordion>
