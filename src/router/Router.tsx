@@ -6,6 +6,7 @@ import { homeRoutes } from './HomeRoutes';
 import { SignUp } from '../components/pages/SignUp';
 import { Page404 } from '../components/pages/Page404';
 import { HeaderLayout } from '../components/templates/HeaderLayout';
+import { LoggedInRoute } from './LoggedInRoute';
 
 export const Router: VFC = memo(() => {
 	return (
@@ -26,7 +27,9 @@ export const Router: VFC = memo(() => {
 								exact={route.exact}
 								path={`${url}${route.path}`}
 							>
-								<HeaderLayout>{route.children}</HeaderLayout>
+								<HeaderLayout>
+									<LoggedInRoute>{route.children}</LoggedInRoute>
+								</HeaderLayout>
 							</Route>
 						))}
 					</Switch>
