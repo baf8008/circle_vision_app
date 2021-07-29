@@ -1,6 +1,8 @@
 import { memo, VFC, useContext, ReactNode } from 'react';
 import { Redirect } from 'react-router-dom';
+
 import { Spinner } from '@chakra-ui/react';
+
 import { AuthContext } from '../components/providers/AuthProvider';
 
 type Props = {
@@ -24,5 +26,5 @@ export const LoggedInRoute: VFC<Props> = memo((props) => {
 	if (authState.user === null) {
 		return <Redirect to='/' />;
 	}
-	return children;
+	return <>{children}</>;
 });
