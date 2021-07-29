@@ -40,6 +40,7 @@ export const Header: VFC = memo(() => {
 				bg='blue.600'
 				color='white'
 				padding={{ base: 3, md: 5 }}
+				w='100vw'
 			>
 				<Flex
 					align='center'
