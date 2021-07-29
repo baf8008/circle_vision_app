@@ -5,10 +5,12 @@ import { Box, Button, Flex, Text } from '@chakra-ui/react';
 type Props = {
 	username: string;
 	body: string;
+	isAuthor: boolean;
+	onClick: () => void;
 };
 
 export const ChatItem: VFC<Props> = memo((props) => {
-	const { username, body } = props;
+	const { username, body, isAuthor, onClick } = props;
 	return (
 		<Box
 			bg='white'
@@ -22,16 +24,19 @@ export const ChatItem: VFC<Props> = memo((props) => {
 				<Text fontWeight='bold' fontSize={{ base: 'xl', md: '3xl' }}>
 					{username}
 				</Text>
-				<Button
-					size='sm'
-					fontSize={{ base: 'xs', md: 'xl' }}
-					px={5}
-					bg='gray.100'
-					shadow='md'
-					_hover={{ opacity: 0.8 }}
-				>
-					削除
-				</Button>
+				{isAuthor && (
+					<Button
+						onClick={onClick}
+						size='sm'
+						fontSize={{ base: 'xs', md: 'xl' }}
+						px={5}
+						bg='gray.100'
+						shadow='md'
+						_hover={{ opacity: 0.8 }}
+					>
+						削除
+					</Button>
+				)}
 			</Flex>
 			<Text fontSize={{ base: 'sm', md: 'xl' }}>{body}</Text>
 		</Box>
