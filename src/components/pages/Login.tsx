@@ -22,6 +22,8 @@ import { EmailIcon, UnlockIcon, ViewIcon, ViewOffIcon } from '@chakra-ui/icons';
 
 import { auth } from '../../firebase/config';
 
+import { useMessage } from '../../hooks/useMessage';
+
 export const Login: VFC = memo(() => {
 	const [show, setShow] = useState(false);
 	const handleClickPassword = useCallback(
@@ -35,23 +37,34 @@ export const Login: VFC = memo(() => {
 		[history]
 	);
 
+	const { showMessage } = useMessage();
+
 	const [email, setEmail] = useState<string>('');
 	const [password, setPassword] = useState<string>('');
 
 	const handleSubmit = useCallback(
 		(e: FormEvent<HTMLFormElement>) => {
 			e.preventDefault();
+
 			auth
 				.signInWithEmailAndPassword(email, password)
 				.then((userCredential) => {
-					history.push('/home');
+					if (userCredential.user) {
+						showMessage({ title: 'ログイン成功！', status: 'success' });
+						history.push('/home');
+					}
 					console.log('ログイン成功', userCredential);
 				})
 				.catch((err) => {
+					showMessage({
+						title: 'ログインできません。',
+						description: 'メールアドレスとパスワードを再度ご確認ください。',
+						status: 'error',
+					});
 					console.log('ログイン失敗', err);
 				});
 		},
-		[email, password, history]
+		[email, password, history, showMessage]
 	);
 
 	return (
@@ -122,13 +135,19 @@ export const Login: VFC = memo(() => {
 										onChange={(e) => setPassword(e.target.value)}
 										mb={4}
 									/>
-									<InputRightElement width='4.5rem'>
+									<InputRightElement width='2.0rem'>
 										<Button size='sm' onClick={handleClickPassword}>
 											{show ? <ViewOffIcon /> : <ViewIcon />}
 										</Button>
 									</InputRightElement>
 								</InputGroup>
-								<Button type='submit' colorScheme='blue' size='md' shadow='md'>
+								<Button
+									type='submit'
+									disabled={email.trim() === '' && password.trim() === ''}
+									colorScheme='blue'
+									size='md'
+									shadow='md'
+								>
 									ログイン
 								</Button>
 								<Link mt={3} onClick={handleClickSignUp}>
