@@ -21,12 +21,14 @@ import { EmailIcon, UnlockIcon, ViewIcon, ViewOffIcon } from '@chakra-ui/icons';
 import { useMessage } from '../../hooks/useMessage';
 
 export const SignUp: VFC = memo(() => {
+	//パスワードの非表示／表示の処理
 	const [show, setShow] = useState(false);
 	const handleClickPassword = useCallback(
 		() => setShow(!show),
 		[show, setShow]
 	);
 
+	//Login画面へ遷移
 	const history = useHistory();
 	const handleClickLogin = useCallback(() => history.push('/'), [history]);
 
@@ -36,6 +38,7 @@ export const SignUp: VFC = memo(() => {
 	const [email, setEmail] = useState<string>('');
 	const [password, setPassword] = useState<string>('');
 
+	//サインイン処理
 	const handleSubmit = useCallback(
 		(e: FormEvent<HTMLFormElement>) => {
 			e.preventDefault();
