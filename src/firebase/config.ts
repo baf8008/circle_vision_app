@@ -4,13 +4,14 @@ import 'firebase/auth';
 import 'firebase/firestore';
 
 const firebaseConfig = {
-	apiKey: 'AIzaSyAZR9xhoAZqCfzCrWavhQ5XrL3DH0gfjeE',
-	authDomain: 'circle-of-vision.firebaseapp.com',
-	projectId: 'circle-of-vision',
-	storageBucket: 'circle-of-vision.appspot.com',
-	messagingSenderId: '310859737949',
-	appId: '1:310859737949:web:26db5bbb4b81a1af5296b4',
-	measurementId: 'G-4J1X9N1346',
+	apiKey: process.env.REACT_APP_FIREBASE_APIKEY,
+	authDomain: process.env.REACT_APP_FIREBASE_AUTH_DOMAIN,
+	databaseURL: process.env.REACT_APP_FIREBASE_DATABASE_URL,
+	projectId: process.env.REACT_APP_FIREBASE_PROJECT_ID,
+	storageBucket: process.env.REACT_APP_FIREBASE_STORAGE_BUCKET,
+	messagingSenderId: process.env.REACT_APP_FIREBASE_MESSAGING_SENDER_ID,
+	appId: process.env.REACT_APP_FIREBASE_APP_ID,
+	measurementId: process.env.REACT_APP_FIREBASE_MEASUREMENT_ID,
 };
 
 firebase.initializeApp(firebaseConfig);
