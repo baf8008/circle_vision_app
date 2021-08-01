@@ -7,6 +7,7 @@ type Props = {
 	status: 'info' | 'warning' | 'success' | 'error';
 };
 
+//ログイン時、サインイン時のメッセージ表示処理
 export const useMessage = () => {
 	const toast = useToast();
 
