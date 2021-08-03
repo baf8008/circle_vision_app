@@ -14,6 +14,7 @@ export const AuthProvider = memo((props: { children: ReactNode }) => {
 	const { children } = props;
 	const [authState, setAuthState] = useState<defaultValueType>(defaultValue);
 
+	//ユーザーのログイン状態の処理
 	useEffect(() => {
 		auth.onAuthStateChanged((user) => {
 			if (user === null) {
