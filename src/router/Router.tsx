@@ -27,9 +27,9 @@ export const Router: VFC = memo(() => {
 								exact={route.exact}
 								path={`${url}${route.path}`}
 							>
-								<HeaderLayout>
-									<LoggedInRoute>{route.children}</LoggedInRoute>
-								</HeaderLayout>
+								<LoggedInRoute>
+									<HeaderLayout>{route.children}</HeaderLayout>
+								</LoggedInRoute>
 							</Route>
 						))}
 					</Switch>
