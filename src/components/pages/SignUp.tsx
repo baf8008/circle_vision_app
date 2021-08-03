@@ -64,7 +64,7 @@ export const SignUp: VFC = memo(() => {
 					showMessage({
 						title: 'ユーザー作成失敗!',
 						description:
-							'ユーザー名とメールアドレスの入力されましたか？パスワードは半角英数字6文字以上になってますか？',
+							'すべて正しく入力されましたか？パスワードは半角英数字6文字以上になります。',
 						status: 'error',
 					});
 					console.log('ユーザー作成失敗', err);
