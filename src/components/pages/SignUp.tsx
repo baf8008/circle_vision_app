@@ -38,16 +38,24 @@ export const SignUp: VFC = memo(() => {
 	const [email, setEmail] = useState<string>('');
 	const [password, setPassword] = useState<string>('');
 
-	//サインイン処理
-	const handleSubmit = useCallback(
+	//firebaseにユーザー新規登録をする処理
+	const handleSignUp = useCallback(
 		(e: FormEvent<HTMLFormElement>) => {
 			e.preventDefault();
+
 			auth
 				.createUserWithEmailAndPassword(email, password)
 				.then((userCredential) => {
 					userCredential.user?.updateProfile({ displayName: username });
+					auth.currentUser?.sendEmailVerification();
+
 					if (userCredential.user) {
-						showMessage({ title: 'ユーザー作成成功！', status: 'success' });
+						showMessage({
+							title: 'ユーザー作成成功！',
+							description:
+								'登録されたメールアドレスに確認メールを送りました。確認してください。',
+							status: 'success',
+						});
 						history.push('/home');
 					}
 					console.log('ユーザー作成成功', userCredential);
@@ -78,7 +86,7 @@ export const SignUp: VFC = memo(() => {
 					ユーザー登録
 				</Heading>
 				<Divider my={4} />
-				<form onSubmit={handleSubmit}>
+				<form onSubmit={handleSignUp}>
 					<Flex align='center' justify='space-between' direction='column'>
 						<InputGroup>
 							<InputLeftElement
