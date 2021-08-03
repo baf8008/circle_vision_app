@@ -1,5 +1,5 @@
-import { VFC, memo, useState, useCallback, FormEvent } from 'react';
-import { useHistory } from 'react-router-dom';
+import { VFC, memo, useState, useCallback, FormEvent, useContext } from 'react';
+import { Redirect, useHistory } from 'react-router-dom';
 
 import {
 	Accordion,
@@ -23,8 +23,10 @@ import { EmailIcon, UnlockIcon, ViewIcon, ViewOffIcon } from '@chakra-ui/icons';
 import { auth } from '../../firebase/config';
 
 import { useMessage } from '../../hooks/useMessage';
+import { AuthContext } from '../providers/AuthProvider';
 
 export const Login: VFC = memo(() => {
+	//パスワードの表示／非表示処理
 	const [show, setShow] = useState(false);
 	const handleClickPassword = useCallback(
 		() => setShow(!show),
@@ -32,6 +34,7 @@ export const Login: VFC = memo(() => {
 	);
 
 	const history = useHistory();
+	//ユーザー登録画面に遷移する処理
 	const handleClickSignUp = useCallback(
 		() => history.push('/signup'),
 		[history]
@@ -39,33 +42,37 @@ export const Login: VFC = memo(() => {
 
 	const { showMessage } = useMessage();
 
-	const [email, setEmail] = useState<string>('');
-	const [password, setPassword] = useState<string>('');
+	const [email, setEmail] = useState('');
+	const [password, setPassword] = useState('');
 
-	const handleSubmit = useCallback(
-		(e: FormEvent<HTMLFormElement>) => {
-			e.preventDefault();
+	//userがログイン状態のときは、homeに留まる処理
+	const authState = useContext(AuthContext);
+	if (authState.user) {
+		return <Redirect to='/home' />;
+	}
 
-			auth
-				.signInWithEmailAndPassword(email, password)
-				.then((userCredential) => {
-					if (userCredential.user) {
-						showMessage({ title: 'ログイン成功！', status: 'success' });
-						history.push('/home');
-					}
-					console.log('ログイン成功', userCredential);
-				})
-				.catch((err) => {
-					showMessage({
-						title: 'ログインできません。',
-						description: 'メールアドレスとパスワードを再度ご確認ください。',
-						status: 'error',
-					});
-					console.log('ログイン失敗', err);
+	//firebaseのメール・パスワード認証を連携する処理
+	const handleLogin = (e: FormEvent<HTMLFormElement>) => {
+		e.preventDefault();
+
+		auth
+			.signInWithEmailAndPassword(email, password)
+			.then((userCredential) => {
+				if (userCredential.user) {
+					showMessage({ title: 'ログイン成功！', status: 'success' });
+					history.push('/home');
+				}
+				console.log('ログイン成功', userCredential);
+			})
+			.catch((err) => {
+				showMessage({
+					title: 'ログインできません。',
+					description: 'メールアドレスとパスワードを再度ご確認ください。',
+					status: 'error',
 				});
-		},
-		[email, password, history, showMessage]
-	);
+				console.log('ログイン失敗', err);
+			});
+	};
 
 	return (
 		<>
@@ -107,7 +114,7 @@ export const Login: VFC = memo(() => {
 						<AccordionIcon />
 					</AccordionButton>
 					<AccordionPanel pb={4}>
-						<form onSubmit={handleSubmit}>
+						<form onSubmit={handleLogin}>
 							<Flex align='center' justify='space-between' direction='column'>
 								<InputGroup mt={5}>
 									<InputLeftElement
