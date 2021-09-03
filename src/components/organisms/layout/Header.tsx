@@ -6,10 +6,13 @@ import { Box, Flex, Heading, Link, useDisclosure } from '@chakra-ui/react';
 import { MenuIconButton } from '../../atoms/button/MenuIconButton';
 import { MenuDrawer } from '../../molecules/MenuDrawer';
 import { auth } from '../../../firebase/config';
+import { useMessage } from '../../../hooks/useMessage';
 
 export const Header: VFC = memo(() => {
 	const { isOpen, onClose, onOpen } = useDisclosure();
 	const history = useHistory();
+
+	const { showMessage } = useMessage();
 
 	//それぞれの遷移先
 	const onClickHome = useCallback(() => history.push('/home'), [history]);
@@ -27,9 +30,16 @@ export const Header: VFC = memo(() => {
 	const onClickLogOut = useCallback(() => {
 		auth
 			.signOut()
-			.then(() => console.log('ログアウト成功'))
+			.then(() => {
+				showMessage({
+					title: 'ログアウトしました。',
+					description: 'またお越しください！',
+					status: 'success',
+				});
+				console.log('ログアウト成功');
+			})
 			.catch((err) => console.log('ログアウト失敗', err));
-	}, []);
+	}, [showMessage]);
 
 	return (
 		<>
