@@ -59,7 +59,10 @@ export const Login: VFC = memo(() => {
 			.signInWithEmailAndPassword(email, password)
 			.then((userCredential) => {
 				if (userCredential.user) {
-					showMessage({ title: 'ログイン成功！', status: 'success' });
+					showMessage({
+						title: `ようこそ！${userCredential.user.displayName}さん`,
+						status: 'success',
+					});
 					history.push('/home');
 				}
 				console.log('ログイン成功', userCredential);
