@@ -51,7 +51,7 @@ export const SignUp: VFC = memo(() => {
 
 					if (userCredential.user) {
 						showMessage({
-							title: 'ユーザー作成成功！',
+							title: `はじめまして！${username}さん`,
 							description:
 								'登録されたメールアドレスに確認メールを送りました。確認してください。',
 							status: 'success',
